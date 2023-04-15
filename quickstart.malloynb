@@ -2,7 +2,7 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "# Malloy Quickstart\n\nThis guide introduces the basics of querying data and building a semantic model with the Malloy language. By the end of this tutorial, you will understand how to use Malloy to run queries, build re-usable data models, and do analysis on your data that is nearly impossible in SQL.\n\nData for this notebook lives in this repository in parquet files in the `./data` directory. The queries are run using [DuckDB](https://duckdb.org/), an embedded analytical database.\n\n## A simple `SELECT`\n\nThe following query is equivalent to <code>SELECT id, code, city FROM airports LIMIT 10</code> in SQL:",
+    "value": "# Malloy Quickstart\n\nThis guide introduces the basics of querying data and building a semantic model with the Malloy language. By the end of this tutorial, you will understand how to use Malloy to run queries, build re-usable data models, and do analysis on your data that is nearly impossible in SQL.\n\nData for this notebook lives in this repository in parquet files in the `./data` directory. The queries are run using [DuckDB](https://duckdb.org/), an embedded analytical database. Each code cell in this notebook can be executed by clicking the ▶️ button that appears when you hover on the cell. You can also modify the code and re-execute the queries to play around and try things out.\n\n## A simple `SELECT`\n\nThe following query is equivalent to <code>SELECT id, code, city FROM airports LIMIT 10</code> in SQL:",
     "metadata": {}
   },
   {
