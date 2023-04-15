@@ -2,9 +2,7 @@
 
 This repository contains a notebook file that walks you through the basics of the Malloy language.
 
-We recommend running the notebook directly in your browser in the web-based VSCode experience provided by Github. You can launch this either by visiting this repository from [github.dev](https://github.dev/malloydata/quickstart), or by pressing the `.` key on your keyboard from Github. When prompted by the notification in the bottom right, install the Malloy Extension. 
-
-Once you've installed the Malloy extension, navigate to the [Quickstart Notebook](quickstart.malloynb) and dive in!
+We recommend running the notebook directly in your browser in the web-based VSCode experience provided by Github. You can launch this either by visiting this repository from [github.dev](https://github.dev/malloydata/quickstart), or by pressing the `.` key on your keyboard from Github. When prompted by the notification in the bottom right, install the Malloy Extension. Once you've installed the Malloy extension, navigate to the [Quickstart Notebook](quickstart.malloynb) and dive in!
 
 After completing the quickstart, continue your Malloy journey by:
 
