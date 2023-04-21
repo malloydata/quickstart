@@ -1,3 +1,6 @@
+// This example is fully runnable in the browser-based VSCode at github.dev
+// Install the Malloy VSCode extension in your left side-bar, and run the query on L16
+
 source: flights is table('duckdb:data/flights.parquet') {
   join_one:
     carriers is table('duckdb:data/carriers.parquet') on carrier=carriers.code
@@ -8,8 +11,7 @@ source: flights is table('duckdb:data/flights.parquet') {
 
   dimension:
     is_early is hour(dep_time) <= 5
-}
-
+ }
 
 query: flights -> {
     group_by: carriers.nickname
