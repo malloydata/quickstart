@@ -1,0 +1,44 @@
+source: flights is table('duckdb:data/flights.parquet') {
+  join_one:
+    carriers is table('duckdb:data/carriers.parquet') on carrier=carriers.code
+
+  measure: 
+    flight_count is count()
+    percent_of_flights is flight_count/all(flight_count) * 100
+
+  dimension:
+    is_early is hour(dep_time) <= 5
+}
+
+
+query: flights -> {
+    group_by: carriers.nickname
+    aggregate: flight_count
+    top: 10
+}
+
+query: flights -> {
+    group_by: carriers.nickname
+    aggregate: flight_count
+    where: hour(dep_time) <= 5
+    top: 10
+}
+
+query: flights -> {
+    group_by: carriers.nickname
+    aggregate: flight_count
+    where: is_early
+    top: 10
+}
+
+query: flights -> {
+    group_by: carriers.nickname
+    aggregate: flight_count
+
+    nest: early_vs_late is {
+        group_by: is_early
+        aggregate: flight_count, percent_of_flights
+    }
+
+    top: 10
+}
