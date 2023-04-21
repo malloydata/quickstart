@@ -170,7 +170,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "source: airports_in_california is table('malloy-data.faa.airports') {\n  where: state = 'CA'\n}\n\nquery: airports_in_california -> {\n  top: 5\n  group_by: county\n  aggregate: airport_count is count()\n}",
+    "value": "source: airports_in_california is table('duckdb:data/airports.parquet') {\n  where: state = 'CA'\n}\n\nquery: airports_in_california -> {\n  top: 5\n  group_by: county\n  aggregate: airport_count is count()\n}",
     "metadata": {}
   },
   {
