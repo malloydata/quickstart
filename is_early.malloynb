@@ -124,5 +124,11 @@
     "language": "markdown",
     "value": "This sort of drilling into datasets simply isn't possible with semantic layers that lock you in to a restrictive API. In the query above, we're able to explore the raw dataset, while still taking advantage of the logic we've encoded into the model like the `is_early` dimension.",
     "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "In this notebook, you've seen the power that Malloy puts in your hands to develop a data model, interactively explore your raw data using the model, and use the insights from that exploration to iterate and improve your data model.\n\nTo learn more, check out the following resources:\n* [Malloy quickstart tutorial](https://github.com/malloydata/quickstart)\n* [Malloy documentation](https://malloydata.github.io/documentation/index.html)\n* [Our community Slack channel](https://join.slack.com/t/malloy-community/shared_invite/zt-1t32mufpy-THwP1o1ADJVkd3o2L2zaZw)",
+    "metadata": {}
   }
 ]
