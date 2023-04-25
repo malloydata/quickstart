@@ -1,0 +1,128 @@
+[
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "*This example notebook is can be run in your browser, using the browser-based VSCode at github.dev*\n*Install the Malloy VSCode extension in your left side-bar, and run the code cells here.*",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": " In Malloy, semantic modeling is done using sources. A source is a table or view in the data warehouse, with additional information encoded such as join relationships, measures, and dimensions. Let’s start with a simple source from a database containing FAA data about flights in the USA:\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "source: flights is table('duckdb:data/flights.parquet')",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "The flights table is a fact table, and contains foreign keys to dimension tables. I can add these joins to the source with the `join_one` keyword:",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "// Normally I would edit the `source` that I already defined above, but for the sake of this example I will redefine it here\nsource: flights_with_join is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "Querying this source is simple. In the following query, I request the count of flights for each carrier. It looks like Southwest has the most flights in this dataset.",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: flights_with_join -> {\n  group_by: carriers.nickname\n  aggregate: flight_count is count()\n  top: 5\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "Already I can see the source is doing some work for me. The join between the flights fact table and the carriers dimension table is pre-specified, so I can simply reference the “nickname” field from the carriers table without having to specify the join in the query.\n\nIn addition to specifying joins, I can also add measures. Measures are saved aggregate calculations:",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "source: flights_with_join_and_measure is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n\n  measure:\n    flight_count is count()\n    percent_of_flights is flight_count/all(flight_count) * 100\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "Now, anytime I want to compute either the total flight count, or the percentage of overall flights by some dimensions, I can reference the dimensions defined in the source:",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: flights_with_join_and_measure -> {\n  group_by:\n    carriers.nickname\n  aggregate:\n    flight_count\n    percent_of_flights\n  top: 5\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "Now, suppose for some reason I’m interested in which carriers tend to have flights that depart very early in the morning. I can add a filter to only look at flights where the hour of departure is before 6am:\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: flights_with_join_and_measure -> {\n    group_by: carriers.nickname\n    aggregate: flight_count, percent_of_flights\n    where: hour(dep_time) <= 6\n    top: 5\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "It looks like Southwest doesn’t have many early morning flights. Delta takes the top spot here. I like this way of slicing the data, and want to encode it into a dimension so it’s easy for me or someone else to re-use it later. I’ll create a new dimension on the `flights` source, is_early, with the same definition:",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "source: flights_with_join_and_measure_and_dimension is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n\n  dimension:\n    is_early is hour(dep_time) <= 5\n\n  measure:\n    flight_count is count()\n    percent_of_flights is flight_count/all(flight_count) * 100\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "I can now easily re-use this logic across new queries and unearth new insights. For example, the following query calculates the ratio of “early-morning” to “non-early morning” flights for each carrier (the query also takes advantage of nesting, another super interesting Malloy feature, but a topic for another time):",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: flights_with_join_and_measure_and_dimension -> {\n    group_by: carriers.nickname\n    aggregate: flight_count\n\n    nest: early_vs_late is {\n        group_by: is_early\n        aggregate: flight_count, percent_of_flights\n    }\n\n    top: 6\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "This rapid loop of iteratively exploring, modeling, and re-exploring data is only made possible because the semantic layer and query language are one and the same. If I want to re-define the `is_early` dimension to “before 5am”, I change a single line of code and re-run the queries. This same workflow could take hours in a system like Minerva.",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "If I need to drill into a finer level of granularity, its trivial to access the raw `flights` data. Suppose I want to look at a few examples of early and late flights for Southwest:",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "malloy",
+    "value": "query: flights_with_join_and_measure_and_dimension -> {\n  group_by: is_early\n  \n  nest: raw_flights is {\n    project: carriers.nickname, origin, destination, flight_num, tail_num, dep_time, arr_time\n    limit: 5\n  }\n\n  where: carriers.nickname = 'Southwest'\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "This sort of drilling into datasets simply isn't possible with semantic layers that lock you in to a restrictive API. In the query above, we're able to explore the raw dataset, while still taking advantage of the logic we've encoded into the model like the `is_early` dimension.",
+    "metadata": {}
+  }
+]
