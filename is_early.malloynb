@@ -50,19 +50,19 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "source: flights_with_join_and_measure is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n\n  measure:\n    flight_count is count()\n    percent_of_flights is flight_count/all(flight_count) * 100\n}",
+    "value": "source: flights_with_join_and_measure is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n\n  measure:\n    flight_count is count()\n}",
     "metadata": {}
   },
   {
     "kind": 1,
     "language": "markdown",
-    "value": "Now, anytime I want to compute either the total flight count, or the percentage of overall flights by some dimensions, I can reference the dimensions defined in the source:",
+    "value": "Now, anytime I want to compute the total flight count, split by some dimensions, I can reference the dimensions defined in the source:",
     "metadata": {}
   },
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: flights_with_join_and_measure -> {\n  group_by:\n    carriers.nickname\n  aggregate:\n    flight_count\n    percent_of_flights\n  top: 5\n}",
+    "value": "query: flights_with_join_and_measure -> {\n  group_by:\n    carriers.nickname\n  aggregate:\n    flight_count\n  top: 5\n}",
     "metadata": {}
   },
   {
@@ -74,7 +74,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: flights_with_join_and_measure -> {\n    group_by: carriers.nickname\n    aggregate: flight_count, percent_of_flights\n    where: hour(dep_time) <= 6\n    top: 5\n}",
+    "value": "query: flights_with_join_and_measure -> {\n    group_by: carriers.nickname\n    aggregate: flight_count\n    where: hour(dep_time) <= 6\n    top: 5\n}",
     "metadata": {}
   },
   {
@@ -86,19 +86,19 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "source: flights_with_join_and_measure_and_dimension is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n\n  dimension:\n    is_early is hour(dep_time) <= 5\n\n  measure:\n    flight_count is count()\n    percent_of_flights is flight_count/all(flight_count) * 100\n}",
+    "value": "source: flights_with_join_and_measure_and_dimension is table('duckdb:data/flights.parquet') {\n  join_one:\n    carriers is table('duckdb:data/carriers.parquet') on carrier = carriers.code\n\n  dimension:\n    is_early is hour(dep_time) <= 5\n\n  measure:\n    flight_count is count()\n}",
     "metadata": {}
   },
   {
     "kind": 1,
     "language": "markdown",
-    "value": "I can now easily re-use this logic across new queries and unearth new insights. For example, the following query calculates the ratio of “early-morning” to “non-early morning” flights for each carrier (the query also takes advantage of nesting, another super interesting Malloy feature, but a topic for another time):",
+    "value": "I can now easily re-use this logic across new queries and unearth new insights. For example, the following query looks at the proporition `of “early-morning” to “non-early morning” flights for each carrier (the query also takes advantage of nesting, another super interesting Malloy feature, but a topic for another time):",
     "metadata": {}
   },
   {
     "kind": 2,
     "language": "malloy",
-    "value": "query: flights_with_join_and_measure_and_dimension -> {\n    group_by: carriers.nickname\n    aggregate: flight_count\n\n    nest: early_vs_late is {\n        group_by: is_early\n        aggregate: flight_count, percent_of_flights\n    }\n\n    top: 6\n}",
+    "value": "query: flights_with_join_and_measure_and_dimension -> {\n    group_by: carriers.nickname\n    aggregate: flight_count\n\n    nest: early_vs_late is {\n        group_by: is_early\n        aggregate: flight_count\n    }\n\n    top: 6\n}",
     "metadata": {}
   },
   {
