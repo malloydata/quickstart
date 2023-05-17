@@ -116,7 +116,7 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "Sources can also contain named queries. These named queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.\n\n*do we need to define the arrow here?*",
+    "value": "Sources can also contain named queries. These named queries are useful for building nested queries (covered later) or for saving a query so it can re-used again and again without having to rewrite it.\n",
     "metadata": {}
   },
   {
