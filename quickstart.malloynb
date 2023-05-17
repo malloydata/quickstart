@@ -8,13 +8,13 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "run: table('duckdb:data/airports.parquet') -> \n  select {\n    project:\n      id\n      code\n      city\n    limit: 10\n  }",
+    "value": "run: duckdb.table('data/airports.parquet') -> \n  select {\n    project:\n      id\n      code\n      city\n    limit: 10\n  }",
     "metadata": {}
   },
   {
     "kind": 1,
     "language": "markdown",
-    "value": "Let's break down each part of this query.\n- `run:` is the opening statement that indicates we're starting to write a query\n- `table('malloy-data.faa.airports')` defines the source for the query. The `table()` function creates a source from a table or view in the database.\n  - A source is similar to a table or view in SQL, but Malloy sources can include additional *definitions* like joins and measures. We'll cover this in depth later on.\n- The `->` operator begins the query. All queries take the form `source -> select { ... }`, with the query logic specified inside select block.\n- `project: ` operation is equivalent to `SELECT` in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.\n- `limit: 10` limits the resultset of the query to the first 10 items",
+    "value": "Let's break down each part of this query.\n- `run:` is the opening statement that indicates we're starting to write a query\n- `table('malloy-data.faa.airports')` defines the *source* for the query. This is equivalant to the FROM part of a SQL query.  The `duckdb.table()` specifies that the data should come from a table in duckdb.\n- The `->` operator says we are going to run a query against the source. All queries take the form `source -> query-operation`, with the query logic specified inside select block\n- `select {..}` this is the transformation (query operation) we want to perform against the source\n- `project: ` Project in relational algebra [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) means pick individual columns. In this clause, we select the `id`, `code`, and `city` columns from the table. \n- `limit: 10` limits the resultset of the query to the first 10 items",
     "metadata": {}
   },
   {
