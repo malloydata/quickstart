@@ -146,7 +146,7 @@
   {
     "kind": 2,
     "language": "malloy",
-    "value": "run: flights -> \n  select {\n    join_one: airports on destination = airports.code\n    group_by: airports.full_name\n    aggregate: flight_count is count()\n    top: 5\n  }",
+    "value": "run: flights\n  def {\n    join_one: airports on destination = airports.code\n  }\n  -> \n  select {\n    group_by: airports.full_name\n    aggregate: flight_count is count()\n    top: 5\n  }",
     "metadata": {}
   },
   {
