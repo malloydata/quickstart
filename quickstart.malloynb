@@ -81,7 +81,7 @@ query: table('duckdb:data/airports.parquet') -> {
 }
 >>>markdown
 
-Notice that Malloy uses the form "_name_ `is` _value_" instead of SQL's "_value_ `as` _name_".
+Notice that Malloy uses the form "**name** `is` _value_" instead of SQL's "_value_ `as` **name**".
 Having the output column name written first makes it easier for someone reading
 the code to visualize the resulting query structure.
 
