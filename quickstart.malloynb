@@ -9,7 +9,6 @@ Data for this notebook lives in this repository in parquet files in the `./data`
 
 The following query is equivalent to <code>SELECT id, code, city FROM airports LIMIT 10</code> in SQL:
 >>>malloy
->>>malloy
 query: table('duckdb:data/airports.parquet') -> {
   project:
     id
