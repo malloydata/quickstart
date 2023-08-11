@@ -85,7 +85,7 @@ Notice that Malloy uses the form "**name** `is` _value_" instead of SQL's "_valu
 Having the output column name written first makes it easier for someone reading
 the code to visualize the resulting query structure.
 
-Named objects, like columns from a table, and fields defined in a source, can be included in field lists without an `is`
+Named objects (such as columns from a table and fields defined in a source) can be included in field lists without an `is`
 
 >>>malloy
 query: table('duckdb:data/airports.parquet') -> {
@@ -111,11 +111,11 @@ query: table('duckdb:data/airports.parquet') -> {
   limit: 10
 }
 >>>markdown
-The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`, and `timestamp`.
+The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`, `timestamp`.
 >>>markdown
 ## Sources: the Basic Structure for Modeling and Reuse
 
-One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
+One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information such as joins, dimensions and measures encoded into it. You can think of a *source* as a more composable SQL `WITH`.
 
 In the example below, we create a *source* object named `airports`, add a `dimension` calculation for `county_and_state`, and a `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
 >>>malloy
