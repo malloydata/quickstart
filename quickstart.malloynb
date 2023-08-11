@@ -111,7 +111,7 @@ query: table('duckdb:data/airports.parquet') -> {
   limit: 10
 }
 >>>markdown
-The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`, `timestamp`.
+The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`, and `timestamp`.
 >>>markdown
 ## Sources: the Basic Structure for Modeling and Reuse
 
@@ -319,14 +319,18 @@ Literals of type `date` and `timestamp` are notated with an `@`, e.g. `@2003-03-
 Time literals can be used as values, but are more often useful in filters. For example, the following query
 shows the number of flights in 2003.
 >>>malloy
-query: table('duckdb:data/flights.parquet') { where: dep_time ? @2003 } -> {
+query: table('duckdb:data/flights.parquet') {
+  where: dep_time ? @2003
+} -> {
   aggregate: flight_count is count()
 }
 >>>markdown
 
 There is a special time literal `now`, referring to the current timestamp, which allows for relative time filters.
 >>>malloy
-query: table('duckdb:data/flights.parquet') { where: dep_time > now - 6 hours } -> {
+query: table('duckdb:data/flights.parquet') {
+  where: dep_time > now - 6 hours
+} -> {
   aggregate: flights_last_6_hours is count()
 }
 >>>markdown
@@ -387,7 +391,7 @@ query: table('duckdb:data/flights.parquet') { where: dep_time > @2003 } -> {
 
 ## Pipelines and Multi-stage Queries
 
-The output from one stage of a query can be passed into another stage using `->`. For example, we'll start with this query which outputs, for California and New York, the total number of airports, as well as the number of airports in each county.
+As we saw above, the output from one stage of a query can be passed into another stage using `->`. For example, we'll start with this query which outputs, for California and New York, the total number of airports, as well as the number of airports in each county.
 >>>malloy
 query: airports -> {
   where: state = 'CA' | 'NY'
