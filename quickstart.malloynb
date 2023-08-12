@@ -81,11 +81,11 @@ query: table('duckdb:data/airports.parquet') -> {
 }
 >>>markdown
 
-Notice that Malloy uses the form "_name_ `is` _value_" instead of SQL's "_value_ `as` _name_".
+Notice that Malloy uses the form "**name** `is` _value_" instead of SQL's "_value_ `as` **name**".
 Having the output column name written first makes it easier for someone reading
 the code to visualize the resulting query structure.
 
-Named objects, like columns from a table, and fields defined in a source, can be included in field lists without an `is`
+Named objects (such as columns from a table and fields defined in a source) can be included in field lists without an `is`
 
 >>>malloy
 query: table('duckdb:data/airports.parquet') -> {
@@ -115,7 +115,7 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 >>>markdown
 ## Sources: the Basic Structure for Modeling and Reuse
 
-One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information, such as joins, dimensions and measures.
+One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information such as joins, dimensions and measures encoded into it.
 
 In the example below, we create a *source* object named `airports`, add a `dimension` calculation for `county_and_state`, and a `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
 >>>malloy
@@ -319,14 +319,18 @@ Literals of type `date` and `timestamp` are notated with an `@`, e.g. `@2003-03-
 Time literals can be used as values, but are more often useful in filters. For example, the following query
 shows the number of flights in 2003.
 >>>malloy
-query: table('duckdb:data/flights.parquet') { where: dep_time ? @2003 } -> {
+query: table('duckdb:data/flights.parquet') {
+  where: dep_time ? @2003
+} -> {
   aggregate: flight_count is count()
 }
 >>>markdown
 
 There is a special time literal `now`, referring to the current timestamp, which allows for relative time filters.
 >>>malloy
-query: table('duckdb:data/flights.parquet') { where: dep_time > now - 6 hours } -> {
+query: table('duckdb:data/flights.parquet') {
+  where: dep_time > now - 6 hours
+} -> {
   aggregate: flights_last_6_hours is count()
 }
 >>>markdown
@@ -387,7 +391,7 @@ query: table('duckdb:data/flights.parquet') { where: dep_time > @2003 } -> {
 
 ## Pipelines and Multi-stage Queries
 
-The output from one stage of a query can be passed into another stage using `->`. For example, we'll start with this query which outputs, for California and New York, the total number of airports, as well as the number of airports in each county.
+As we saw above, the output from one stage of a query can be passed into another stage using `->`. For example, we'll start with this query which outputs, for California and New York, the total number of airports, as well as the number of airports in each county.
 >>>malloy
 query: airports -> {
   where: state = 'CA' | 'NY'
