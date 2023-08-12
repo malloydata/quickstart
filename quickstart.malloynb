@@ -115,7 +115,7 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 >>>markdown
 ## Sources: the Basic Structure for Modeling and Reuse
 
-One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information such as joins, dimensions and measures encoded into it. You can think of a *source* as a more composable SQL `WITH`.
+One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information such as joins, dimensions and measures encoded into it.
 
 In the example below, we create a *source* object named `airports`, add a `dimension` calculation for `county_and_state`, and a `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
 >>>malloy
