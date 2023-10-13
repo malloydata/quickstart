@@ -18,8 +18,9 @@ run: table('duckdb:data/airports.parquet') -> {
 }
 >>>markdown
 Let's break down each part of this query.
-- `query:` is the opening statement that indicates we're starting to write a query
-- `table('malloy-data.faa.airports')` defines the source for the query. The `table()` function creates a source from a table or view in the database.
+### There is no `query:` operator above; is `run:` the new `query:` and if so needs to be globally replaced docs?
+- `run:` is the opening statement that indicates we're starting to write a query
+- `table('duckdb:data/airports.parquet')` defines the source for the query. The `table()` function creates a source from a table or view in the database.
   - A source is similar to a table or view in SQL, but Malloy sources can include additional information like joins and measures. We'll cover this in depth later on.
 - The `->` operator begins the query. All queries take the form `source -> { ... }`, with the query logic specified inside of the curly braces.
 - `project: ` is equivalent to `SELECT` in SQL. In this clause, we select the `id`, `code`, and `city` columns from the table. The `project` operator takes its name from the [projection](https://en.wikipedia.org/wiki/Projection_(relational_algebra)) operation in Relational Algebra.
