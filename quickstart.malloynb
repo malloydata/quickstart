@@ -104,7 +104,7 @@ The basic types of Malloy expressions are `string`, `number`, `boolean`, `date`,
 
 One of the main benefits of Malloy is the ability to save common calculations into a data model. The data model is made of *sources*, which can be thought of as tables or views, but with additional information such as joins, dimensions and measures encoded into it.
 
-In the example below, we create a *source* object named `airports`, add a `dimension` calculation for `county_and_state`, and a `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `project` and `where`.  Measures can be used in `aggregate` and `having`.
+In the example below, we create a *source* object named `airports`, add a `dimension` calculation for `county_and_state`, and a `measure` calculation for `airport_count`.  Dimensions can be used in `group_by`, `select` and `where`.  Measures can be used in `aggregate` and `having`.
 >>>malloy
 source: airports is duckdb.table('data/airports.parquet') extend {
   dimension: county_and_state is concat(county, ', ', state)
@@ -176,10 +176,14 @@ In this example, the `aircraft` source is joined to `flights`, and `aircraft_mod
 
 Now, any query that uses the `flights` source has access to fields in both `aircraft` and `aircraft_models` without having to explicitly specify the join condition. The joins are specified once in the source, and usable by any query on `flights`.
 
-An ad hoc join can also be specified in a query block. In the query below, we join in the `airports` table using the `destination` column as a join key, then compute the top 5 destination airports by flight count.
+An ad hoc join can also be specified in a query block using the `extend` keyword. In the query below, we join in the `airports` table using the `destination` column as a join key, then compute the top 5 destination airports by flight count.
 >>>malloy
 run: flights -> {
-  join_one: airports on destination = airports.code
+
+  extend: {
+    join_one: airports on destination = airports.code
+  }
+
   group_by: airports.full_name
   aggregate: flight_count is count()
   top: 5
