@@ -341,7 +341,7 @@ run: duckdb.table('data/flights.parquet') -> {
 
 ### Extraction
 
-Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](https://malloydata.github.io/documentation/language/time-ranges).
+Numeric values can be extracted from time values, e.g. `day_of_year(some_date)` or `minute(some_time)`. See the full list of extraction functions [here](https://malloydata.github.io/documentation/language/timestamp-operations#extraction).
 >>>malloy
 run: duckdb.table('data/flights.parquet') -> {
   order_by: 1
